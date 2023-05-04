@@ -27,18 +27,19 @@ class UsersController extends Controller
         $doctorData = Doctor::all();
         //this is the date format without leading
         $date = now()->format('n/j/Y'); //change date format to suit the format in database
-
+        //https://www.php.net/manual/en/datetime.format.php
+        
         //make this appointment filter only status is "upcoming"
         $appointment = Appointments::where('status', 'upcoming')->where('date', $date)->first();
 
         //collect user data and all doctor details
-        foreach($doctorData as $data){
+        foreach ($doctorData as $data) {
             //sorting doctor name and doctor details
-            foreach($doctor as $info){
-                if($data['doc_id'] == $info['id']){
+            foreach ($doctor as $info) {
+                if ($data['doc_id'] == $info['id']) {
                     $data['doctor_name'] = $info['name'];
                     $data['doctor_profile'] = $info['profile_photo_url'];
-                    if(isset($appointment) && $appointment['doc_id'] == $info['id']){
+                    if (isset($appointment) && $appointment['doc_id'] == $info['id']) {
                         $data['appointments'] = $appointment;
                     }
                 }
@@ -60,17 +61,17 @@ class UsersController extends Controller
     {
         //validate incoming inputs
         $reqeust->validate([
-            'email'=>'required|email',
-            'password'=>'required',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         //check matching user
         $user = User::where('email', $reqeust->email)->first();
 
         //check password
-        if(!$user || ! Hash::check($reqeust->password, $user->password)){
+        if (!$user || !Hash::check($reqeust->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email'=>['The provided credentials are incorrect'],
+                'email' => ['The provided credentials are incorrect'],
             ]);
         }
 
@@ -87,21 +88,21 @@ class UsersController extends Controller
     {
         //validate incoming inputs
         $request->validate([
-            'name'=>'required|string',
-            'email'=>'required|email',
-            'password'=>'required',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         $user = User::create([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'type'=>'user',
-            'password'=>Hash::make($request->password),
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => 'user',
+            'password' => Hash::make($request->password),
         ]);
 
         $userInfo = UserDetails::create([
-            'user_id'=>$user->id,
-            'status'=>'active',
+            'user_id' => $user->id,
+            'status' => 'active',
         ]);
 
         return $user;
@@ -112,13 +113,13 @@ class UsersController extends Controller
     /**
      * update favorite doctor list
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function storeFavDoc(Request $request)
     {
 
-        $saveFav = UserDetails::where('user_id',Auth::user()->id)->first();
+        $saveFav = UserDetails::where('user_id', Auth::user()->id)->first();
 
         $docList = json_encode($request->get('favList'));
 
@@ -127,7 +128,7 @@ class UsersController extends Controller
         $saveFav->save();
 
         return response()->json([
-            'success'=>'The Favorite List is updated',
+            'success' => 'The Favorite List is updated',
         ], 200);
     }
 
@@ -136,12 +137,13 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function logout(){
+    public function logout()
+    {
         $user = Auth::user();
         $user->currentAccessToken()->delete();
 
         return response()->json([
-            'success'=>'Logout successfully!',
+            'success' => 'Logout successfully!',
         ], 200);
     }
 
@@ -158,7 +160,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -169,7 +171,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -180,7 +182,7 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -191,8 +193,8 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -203,7 +205,7 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
