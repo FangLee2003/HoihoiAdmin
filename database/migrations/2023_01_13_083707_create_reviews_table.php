@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('doc_id');
-            $table->unsignedInteger('ratings')->nullable();
+            $table->unsignedInteger('ratings');
             $table->longText('reviews')->nullable();
             $table->string('reviewed_by');
             $table->string('status');

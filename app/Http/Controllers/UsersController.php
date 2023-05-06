@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointments;
+use App\Models\Reviews;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\UserDetails;
@@ -25,12 +26,12 @@ class UsersController extends Controller
         $doctor = User::where('type', 'doctor')->get();
         $details = $user->user_details;
         $doctorData = Doctor::all();
+
         //this is the date format without leading
         $date = now()->format('n/j/Y'); //change date format to suit the format in database
-        //https://www.php.net/manual/en/datetime.format.php
-        
-        //make this appointment filter only status is "upcoming"
-        $appointment = Appointments::where('status', 'upcoming')->where('date', $date)->first();
+
+        //make this appointment filter only status is "booked"
+        $appointment = Appointments::where('status', 'booked')->where('date', $date)->first();
 
         //collect user data and all doctor details
         foreach ($doctorData as $data) {
@@ -39,13 +40,28 @@ class UsersController extends Controller
                 if ($data['doc_id'] == $info['id']) {
                     $data['doctor_name'] = $info['name'];
                     $data['doctor_profile'] = $info['profile_photo_url'];
+
+                    $reviews = Reviews::where('doc_id', $data['doc_id'])->get();
+                    $count = count($reviews);
+
+                    $data['doctor_review'] = $count;
+                    $data['doctor_rating'] = 0;
+                    if ($count > 0) {
+                        foreach ($reviews as $review) {
+                            //get total rating
+                            $data['doctor_rating'] += $review['ratings'];
+                        }
+                        $data['doctor_rating'] = round($data['doctor_rating'] / $count, 2); //get average rating
+                    }
                     if (isset($appointment) && $appointment['doc_id'] == $info['id']) {
-                        $data['appointments'] = $appointment;
+                        $data['id'] = $appointment->id;
+                        $data['day'] = $appointment->day;
+                        $data['date'] = $appointment->date;
+                        $data['time'] = $appointment->time;
                     }
                 }
             }
         }
-
         $user['doctor'] = $doctorData;
         $user['details'] = $details; //return user details here together with doctor list
 
