@@ -23,7 +23,6 @@ class UsersController extends Controller
     {
         $user = array(); //this will return a set of user and doctor data
         $user = Auth::user();
-        $doctor = User::where('type', 'doctor')->get();
         $details = $user->user_details;
         $doctorData = Doctor::all();
 
@@ -36,29 +35,28 @@ class UsersController extends Controller
         //collect user data and all doctor details
         foreach ($doctorData as $data) {
             //sorting doctor name and doctor details
-            foreach ($doctor as $info) {
-                if ($data['doc_id'] == $info['id']) {
-                    $data['doctor_name'] = $info['name'];
-                    $data['doctor_profile'] = $info['profile_photo_url'];
+            $doctor = User::where('type', 'doctor')->where('id', $data->id)->first();
+            if ($doctor) {
+                $data['doctor_name'] = $doctor['name'];
+                $data['doctor_profile'] = $doctor['profile_photo_url'];
 
-                    $reviews = Reviews::where('doc_id', $data['doc_id'])->get();
-                    $count = count($reviews);
+                $reviews = Reviews::where('doc_id', $data['doc_id'])->get();
+                $count = count($reviews);
 
-                    $data['doctor_review'] = $count;
-                    $data['doctor_rating'] = 0;
-                    if ($count > 0) {
-                        foreach ($reviews as $review) {
-                            //get total rating
-                            $data['doctor_rating'] += $review['ratings'];
-                        }
-                        $data['doctor_rating'] = round($data['doctor_rating'] / $count, 2); //get average rating
+                $data['doctor_review'] = $count;
+                $data['doctor_rating'] = 0;
+                if ($count > 0) {
+                    foreach ($reviews as $review) {
+                        //get total rating
+                        $data['doctor_rating'] += $review['ratings'];
                     }
-                    if (isset($appointment) && $appointment['doc_id'] == $info['id']) {
-                        $data['id'] = $appointment->id;
-                        $data['day'] = $appointment->day;
-                        $data['date'] = $appointment->date;
-                        $data['time'] = $appointment->time;
-                    }
+                    $data['doctor_rating'] = round($data['doctor_rating'] / $count, 2); //get average rating
+                }
+                if (isset($appointment) && $appointment['doc_id'] == $doctor['id']) {
+                    $data['id'] = $appointment->id;
+                    $data['day'] = $appointment->day;
+                    $data['date'] = $appointment->date;
+                    $data['time'] = $appointment->time;
                 }
             }
         }

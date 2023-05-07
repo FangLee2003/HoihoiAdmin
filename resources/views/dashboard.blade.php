@@ -56,13 +56,12 @@
                                     // get total review count
                                         $count = count($reviews);
                                         $rating = 0;
-                                        $total = 0;
                                         if($count != 0){
                                             foreach ($reviews as $review) {
                                                 //get total rating
-                                                $total += $review['ratings'];
+                                                $rating += $review['ratings'];
                                             }
-                                            $rating = $total / $count; //get average rating
+                                            $rating = round($rating / $count,2); //get average rating
                                         }else{
                                             $rating = 0;
                                         }
@@ -96,7 +95,7 @@
                     <div class="col-md-7 mt-4">
                         <div class="card">
                             <div class="card-header my-3 pb-0 px-3">
-                                <h6 class="mb-0">Latest Reviews</h6>
+                                <h6 class="mb-0 font-semibold text-lg">Latest Reviews</h6>
                             </div>
                             <div class="card-body pt-4 p-3">
                                 {{-- check reviews is not empty --}}

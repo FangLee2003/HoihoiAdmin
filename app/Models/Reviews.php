@@ -10,6 +10,7 @@ class Reviews extends Model
     use HasFactory;
 
     protected $fillable = [
+        'appointment_id',
         'user_id',
         'doc_id',
         'ratings',
@@ -18,7 +19,8 @@ class Reviews extends Model
         'status',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

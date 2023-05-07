@@ -15,6 +15,7 @@ return new class extends Migration {
         //a new database for rating and reviews
         Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('appointment_id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('doc_id');
             $table->unsignedInteger('ratings');

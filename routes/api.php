@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\DocsController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,10 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UsersController::class, 'index']);
     Route::post('/fav', [UsersController::class, 'storeFavDoc']);
     Route::post('/logout', [UsersController::class, 'logout']);
+    Route::get('/appointments', [AppointmentsController::class, 'index']);
     Route::post('/book', [AppointmentsController::class, 'addApp']);
     Route::post('/cancel', [AppointmentsController::class, 'cancelApp']);
-    Route::post('/review', [AppointmentsController::class, 'review']);
-    Route::get('/appointments', [AppointmentsController::class, 'index']);
+    Route::get('/get-reviews', [ReviewsController::class, 'index']);
+    Route::post('/review', [ReviewsController::class, 'review']);
 });
 
 
