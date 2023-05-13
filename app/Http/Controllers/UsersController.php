@@ -44,7 +44,7 @@ class UsersController extends Controller
                 $count = count($reviews);
 
                 $data['doctor_review'] = $count;
-                $data['doctor_rating'] = 0;
+                $data['doctor_rating'] = 0.0;
                 if ($count > 0) {
                     foreach ($reviews as $review) {
                         //get total rating

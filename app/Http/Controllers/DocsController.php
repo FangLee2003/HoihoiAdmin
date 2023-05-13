@@ -18,7 +18,7 @@ class DocsController extends Controller
     {
         //get doctor's appointment, patients and display on dashboard
         $doctor = Auth::user();
-        $appointments = Appointments::where('doc_id', $doctor->id)->where('status', 'upcoming')->get();
+        $appointments = Appointments::where('doc_id', $doctor->id)->where('status', 'booked')->get();
         $reviews = Reviews::where('doc_id', $doctor->id)->where('status', 'active')->get();
 
         //return all data to dashboard
