@@ -112,6 +112,7 @@ class UsersController extends Controller
             'email' => $request->email,
             'type' => 'user',
             'password' => Hash::make($request->password),
+            'profile_photo_path' => 'profile-photos/default.png'
         ]);
 
         $userInfo = UserDetails::create([

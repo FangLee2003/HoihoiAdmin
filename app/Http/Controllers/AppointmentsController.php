@@ -60,6 +60,7 @@ class AppointmentsController extends Controller
         $appointment->date = $request->get('date');
         $appointment->day = $request->get('day');
         $appointment->time = $request->get('time');
+        $appointment->location= $request->get('location');
         $appointment->status = 'booked'; //new appointment will be saved as 'upcoming' by default
         $appointment->save();
 

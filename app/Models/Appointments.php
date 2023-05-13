@@ -15,10 +15,12 @@ class Appointments extends Model
         'date',
         'day',
         'time',
+        'location',
         'status',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }
